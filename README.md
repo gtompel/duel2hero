@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Управление Учетными Записями
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Описание
 
-## Available Scripts
+Это Vue.js 3 приложение, предназначенное для управления учетными записями пользователей. Оно предоставляет удобную форму для добавления, редактирования и удаления учетных записей с поддержкой различных типов аутентификации (LDAP и локальная). Данные хранятся с использованием Pinia и сохраняются между сессиями благодаря персистентности.
 
-In the project directory, you can run:
+## Стек технологий
 
-### `npm start`
+* [Vue.js 3](https://vuejs.org/) - Прогрессивный JavaScript фреймворк для создания пользовательских интерфейсов.
+* [TypeScript](https://www.typescriptlang.org/) - Язык программирования, добавляющий статическую типизацию в JavaScript.
+* [Pinia](https://pinia.vuejs.org/) - Интуитивно понятная, гибкая и легкая библиотека управления состоянием для Vue.js.
+* [PrimeVue](https://primevue.org/) - UI фреймворк для Vue.js с богатым набором готовых компонентов.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Структура формы
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* Заголовок и кнопка добавления учетной записи.
+* Подсказка для поля "Метка".
+* Список учетных записей, отображающий каждую учетную запись в виде карточки.
 
-### `npm test`
+## Поля учетной записи
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Каждая учетная запись имеет следующие поля:
 
-### `npm run build`
+* **Метка:** Текстовое поле для добавления меток (максимум 50 символов, разделенных ";"). Сохраняется как массив объектов.
+* **Тип записи:** Выпадающий список с вариантами "LDAP" и "Локальная".
+* **Логин:** Обязательное текстовое поле (максимум 100 символов).
+* **Пароль:** Обязательное текстовое поле для локальных учетных записей (максимум 100 символов). Не отображается для LDAP учетных записей.
+* **Кнопка удаления:** Позволяет удалить учетную запись из списка.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Логика работы
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* **Добавление новой записи:** Пользователь может добавить новую учетную запись, заполнив и отправив форму.
+* **Удаление записи:** Каждая учетная запись имеет кнопку "Удалить", позволяющую пользователю удалить запись из списка.
+* **Валидация:** Форма валидирует поля при потере фокуса или изменении значений. Обязательные поля проверяются на заполненность, а длина полей ограничена максимальными значениями.
+* **Сохранение меток:** Метки сохраняются в виде массива объектов.
+* **Сохранение данных:** Данные хранятся в Pinia хранилище и сохраняются между сессиями с использованием персистентности.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Запуск проекта
 
-### `npm run eject`
+1. Клонируйте репозиторий:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    ```bash
+    git clone <your-repository-url>
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Перейдите в директорию проекта:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+    ```bash
+    cd <your-project-directory>
+    ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Установите зависимости:
 
-## Learn More
+    ```bash
+    npm install  # или yarn install или pnpm install
+    ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Запустите проект в режиме разработки:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    ```bash
+    npm run dev  # или yarn dev или pnpm dev
+    ```
 
-### Code Splitting
+    Откройте [http://localhost:5173](http://localhost:5173) в вашем браузере.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Сборка проекта
 
-### Analyzing the Bundle Size
+Для сборки проекта для production используйте команду:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm run build  # или yarn build или pnpm build
