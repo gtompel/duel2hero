@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Protocol {
+  id        String   @id @default(cuid())
+  
+  // Вид испытания (обязательно)
+  testType  String
+  
+  // Дата выполнения (три отдельных поля)
+  dateDay   Int      // 1-31
+  dateMonth Int      // 1-12
+  dateYear  Int      // например, 2024
+  
+  // Результат выполнения (числовое значение)
+  resultValue Float
+  
+  // Уровень выполнения (обязательно)
+  level     String   // bronze, silver, gold
+  
+  // Спортивное звание/разряд (опционально)
+  sportTitle     String?
+  sportTitleFrom DateTime?
+  sportTitleTo   DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([testType])
+  @@index([level])
+  @@index([dateYear, dateMonth, dateDay])
+}
+
+model TestType {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model Level {
+  id        String @id @default(cuid())
+  name      String @unique
+  code      String @unique // bronze, silver, gold
+  createdAt DateTime @default(now())
+}
+
+model SportTitle {
+  id        String @id @default(cuid())
+  name      String @unique
+  createdAt DateTime @default(now())
+}
+
+model TextToNumberMapping {
+  id          String @id @default(cuid())
+  textValue   String @unique
+  numberValue Float
+  testType    String
+  createdAt   DateTime @default(now())
+  
+  @@index([testType])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // CREATE, UPDATE, DELETE
+  entity    String   // Protocol, TestType, etc.
+  entityId  String
+  userId    String
+  details   String?  // JSON string with changes
+  createdAt DateTime @default(now())
+  
+  @@index([entity, entityId])
+  @@index([userId])
+}
