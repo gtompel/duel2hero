@@ -2,6 +2,14 @@
 
 import type { Protocol, TestType, Level, SportTitle, TextToNumberMapping, AuditLog, User } from "./types"
 
+function generateId(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback для старых сред
+  return "id-" + Math.random().toString(36).substr(2, 9);
+}
+
 const STORAGE_KEYS = {
   PROTOCOLS: "gto_protocols",
   TEST_TYPES: "gto_test_types",
@@ -49,7 +57,7 @@ export function getProtocol(id: string): Protocol | null {
 export function createProtocol(data: Omit<Protocol, "id" | "createdAt" | "updatedAt">): Protocol {
   const protocol: Protocol = {
     ...data,
-    id: crypto.randomUUID(),
+    id: generateId(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
@@ -248,7 +256,7 @@ function logAction(action: "CREATE" | "UPDATE" | "DELETE", entity: string, entit
   if (!user) return
 
   const log: AuditLog = {
-    id: crypto.randomUUID(),
+    id: generateId(),
     action,
     entity,
     entityId,

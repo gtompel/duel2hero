@@ -45,11 +45,11 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           sportTitleTo: protocol.sportTitleTo,
         }
       : {
-          testType: "", // Default value should be a non-empty string
+          testType: "",
           dateDay: new Date().getDate(),
           dateMonth: new Date().getMonth() + 1,
           dateYear: new Date().getFullYear(),
-          resultValue: 0,
+          resultValue: "",
           level: "bronze",
           sportTitle: "",
           sportTitleFrom: "",
@@ -192,7 +192,7 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
               id="resultValue"
               type="text"
               placeholder="Введите числовое значение или текст (например: 12.5 или 'отлично')"
-              value={resultInput || watch("resultValue")?.toString() || ""}
+              value={resultInput ?? watch("resultValue")?.toString() ?? ""}
               onChange={(e) => handleResultChange(e.target.value)}
               className="h-11"
             />
@@ -230,7 +230,6 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
                 <SelectValue placeholder="Не указано" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Не указано</SelectItem>
                 {sportTitles.map((title) => (
                   <SelectItem key={title.id} value={title.name}>
                     {title.name}

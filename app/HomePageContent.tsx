@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect, useMemo } from "react"
 import { Plus, FileDown, Settings, LogOut, ArrowUpDown, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -7,30 +6,26 @@ import { ProtocolForm } from "@/components/protocol-form"
 import { ProtocolsList } from "@/components/protocols-list"
 import { ProtocolView } from "@/components/protocol-view"
 import { ProtocolsFilter, type FilterOptions } from "@/components/protocols-filter"
-import { ProtectedRoute } from "@/components/auth/protected-route"
 import { useAuth } from "@/components/auth/auth-provider"
 import { getProtocols, createProtocol, updateProtocol, deleteProtocol } from "@/lib/storage"
-import { exportProtocolsToCSV, exportSingleProtocolToCSV } from "@/lib/csv-export"
+import { exportProtocolsToCSV } from "@/lib/csv-export"
 import { filterProtocols, sortProtocols } from "@/lib/filter-utils"
 import type { Protocol } from "@/lib/types"
 import type { ProtocolFormData } from "@/lib/validation"
 import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Loader2 } from "lucide-react"
 
 type ViewMode = "list" | "create" | "edit" | "view"
 type SortBy = "date" | "testType" | "level"
 
-function HomePageContent() {
+export function HomePageContent() {
   const router = useRouter()
   const { user, logout } = useAuth()
-  const [mounted, setMounted] = useState(false)
   const [protocols, setProtocols] = useState<Protocol[]>([])
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [selectedProtocol, setSelectedProtocol] = useState<Protocol | null>(null)
   const [sortBy, setSortBy] = useState<SortBy>("date")
-
   const [filters, setFilters] = useState<FilterOptions>({
     searchQuery: "",
     testType: "",
@@ -44,14 +39,8 @@ function HomePageContent() {
   })
 
   useEffect(() => {
-    setMounted(true)
+    loadProtocols()
   }, [])
-
-  useEffect(() => {
-    if (mounted) {
-      loadProtocols()
-    }
-  }, [mounted])
 
   const loadProtocols = () => {
     setProtocols(getProtocols())
@@ -70,7 +59,6 @@ function HomePageContent() {
 
   const handleEditProtocol = (data: ProtocolFormData) => {
     if (!selectedProtocol) return
-
     updateProtocol(selectedProtocol.id, data)
     loadProtocols()
     setViewMode("list")
@@ -116,14 +104,6 @@ function HomePageContent() {
     })
   }
 
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -135,12 +115,10 @@ function HomePageContent() {
                 {user?.username} ({user?.role === "admin" ? "Админ" : "Пользователь"})
               </p>
             </div>
-
             <div className="hidden md:flex gap-2">
               {user?.role === "admin" && (
                 <Button variant="outline" onClick={() => router.push("/admin")}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Настройки
+                  <Settings className="mr-2 h-4 w-4" /> Настройки
                 </Button>
               )}
               <Button variant="outline" onClick={handleLogout}>
@@ -148,7 +126,6 @@ function HomePageContent() {
                 Выход
               </Button>
             </div>
-
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="outline" size="icon">
@@ -164,7 +141,11 @@ function HomePageContent() {
                     </p>
                   </div>
                   {user?.role === "admin" && (
-                    <Button variant="outline" onClick={() => router.push("/admin")} className="justify-start">
+                    <Button
+                      variant="outline"
+                      onClick={() => router.push("/admin")}
+                      className="justify-start"
+                    >
                       <Settings className="mr-2 h-4 w-4" />
                       Настройки
                     </Button>
@@ -179,7 +160,6 @@ function HomePageContent() {
           </div>
         </div>
       </header>
-
       <main className="container mx-auto px-3 md:px-4 py-4 md:py-8">
         {viewMode === "list" && (
           <div className="space-y-4 md:space-y-6">
@@ -192,7 +172,6 @@ function HomePageContent() {
                   </span>
                 )}
               </h2>
-
               <div className="flex flex-wrap gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -204,11 +183,12 @@ function HomePageContent() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => setSortBy("date")}>По дате</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSortBy("testType")}>По виду испытания</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy("testType")}>
+                      По виду испытания
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSortBy("level")}>По уровню</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-
                 {filteredAndSortedProtocols.length > 0 && (
                   <Button
                     variant="outline"
@@ -223,17 +203,22 @@ function HomePageContent() {
                     <span className="sm:hidden">Экспорт</span>
                   </Button>
                 )}
-
-                <Button onClick={() => setViewMode("create")} size="sm" className="flex-1 sm:flex-none">
+                <Button
+                  onClick={() => setViewMode("create")}
+                  size="sm"
+                  className="flex-1 sm:flex-none"
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Создать протокол</span>
                   <span className="sm:hidden">Создать</span>
                 </Button>
               </div>
             </div>
-
-            <ProtocolsFilter filters={filters} onFilterChange={setFilters} onReset={handleResetFilters} />
-
+            <ProtocolsFilter
+              filters={filters}
+              onFilterChange={setFilters}
+              onReset={handleResetFilters}
+            />
             <ProtocolsList
               protocols={filteredAndSortedProtocols}
               onView={handleViewProtocol}
@@ -242,7 +227,6 @@ function HomePageContent() {
             />
           </div>
         )}
-
         {viewMode === "create" && (
           <div className="space-y-4 md:space-y-6">
             <div className="flex items-center justify-between">
@@ -251,60 +235,30 @@ function HomePageContent() {
             <ProtocolForm onSubmit={handleCreateProtocol} onCancel={handleCancel} />
           </div>
         )}
-
         {viewMode === "edit" && selectedProtocol && (
           <div className="space-y-4 md:space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg md:text-xl font-semibold">Редактирование протокола</h2>
             </div>
-            <ProtocolForm protocol={selectedProtocol} onSubmit={handleEditProtocol} onCancel={handleCancel} />
+            <ProtocolForm
+              protocol={selectedProtocol}
+              onSubmit={handleEditProtocol}
+              onCancel={handleCancel}
+            />
           </div>
         )}
-
         {viewMode === "view" && selectedProtocol && (
           <div className="space-y-4 md:space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center justify-between">
               <h2 className="text-lg md:text-xl font-semibold">Просмотр протокола</h2>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => exportSingleProtocolToCSV(selectedProtocol)}
-                  className="flex-1 sm:flex-none"
-                >
-                  <FileDown className="mr-2 h-4 w-4" />
-                  Экспорт
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleEditClick(selectedProtocol)}
-                  className="flex-1 sm:flex-none"
-                >
-                  Редактировать
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCancel}
-                  className="flex-1 sm:flex-none bg-transparent"
-                >
-                  Назад
-                </Button>
-              </div>
             </div>
             <ProtocolView protocol={selectedProtocol} />
+            <Button variant="outline" onClick={handleCancel}>
+              Назад
+            </Button>
           </div>
         )}
       </main>
     </div>
-  )
-}
-
-export default function HomePage() {
-  return (
-    <ProtectedRoute>
-      <HomePageContent />
-    </ProtectedRoute>
   )
 }
