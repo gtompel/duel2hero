@@ -49,7 +49,7 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           dateDay: new Date().getDate(),
           dateMonth: new Date().getMonth() + 1,
           dateYear: new Date().getFullYear(),
-          resultValue: "",
+          resultValue: 0,
           level: "bronze",
           sportTitle: "",
           sportTitleFrom: "",
@@ -283,7 +283,7 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
             Отмена
           </Button>
         )}
-        <Button type="submit" className="w-full sm:w-auto order-1 sm:order-2 bg-[var(--gto-gold)] text-[#050f24] hover:bg-[var(--gto-gold-light)]">
+        <Button type="submit" className="w-full sm:w-auto order-1 sm:order-2 bg-(--gto-gold) text-[#050f24] hover:bg-(--gto-gold-light)">
           <Save className="mr-2 h-4 w-4" />
           Сохранить протокол
         </Button>
