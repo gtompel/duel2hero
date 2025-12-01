@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { User } from "@/lib/types"
 import { getCurrentUser, logout as logoutUser, login as loginUser } from "@/lib/storage"
 
@@ -17,11 +17,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
+  const loadCurrentUser = useCallback(() => {
     const currentUser = getCurrentUser()
     setUser(currentUser)
     setIsLoading(false)
   }, [])
+
+  useEffect(() => {
+    loadCurrentUser()
+  }, [loadCurrentUser])
 
   const login = (username: string) => {
     const loggedInUser = loginUser(username)

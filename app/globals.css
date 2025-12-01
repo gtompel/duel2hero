@@ -4,75 +4,82 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color scheme for official GTO application */
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.45 0.15 250);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.92 0.01 250);
-  --secondary-foreground: oklch(0.15 0 0);
-  --muted: oklch(0.95 0.005 250);
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.88 0.02 250);
-  --accent-foreground: oklch(0.15 0 0);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.88 0.01 250);
-  --input: oklch(0.88 0.01 250);
-  --ring: oklch(0.45 0.15 250);
-  --chart-1: oklch(0.55 0.18 250);
-  --chart-2: oklch(0.65 0.15 180);
-  --chart-3: oklch(0.6 0.12 80);
-  --chart-4: oklch(0.7 0.1 320);
-  --chart-5: oklch(0.5 0.2 30);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.45 0.15 250);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.92 0.01 250);
-  --sidebar-accent-foreground: oklch(0.15 0 0);
-  --sidebar-border: oklch(0.88 0.01 250);
-  --sidebar-ring: oklch(0.45 0.15 250);
+  /* Палитра gto.ru: глубокий синий + золотой акцент */
+  --gto-navy: #050f24;
+  --gto-navy-light: #0e1f3f;
+  --gto-blue: #153b73;
+  --gto-gold: #d6a03a;
+  --gto-gold-light: #f1c166;
+  --gto-red: #c7422f;
+  --gto-snow: #f5f7fb;
+  --background: var(--gto-navy);
+  --foreground: var(--gto-snow);
+  --card: rgba(14, 31, 63, 0.85);
+  --card-foreground: var(--gto-snow);
+  --popover: rgba(14, 31, 63, 0.92);
+  --popover-foreground: var(--gto-snow);
+  --primary: var(--gto-gold);
+  --primary-foreground: #0a0e18;
+  --secondary: rgba(255, 255, 255, 0.1);
+  --secondary-foreground: var(--gto-snow);
+  --muted: rgba(255, 255, 255, 0.08);
+  --muted-foreground: rgba(245, 247, 251, 0.7);
+  --accent: var(--gto-red);
+  --accent-foreground: #fff5e1;
+  --destructive: #ff4d4d;
+  --destructive-foreground: #fff5f5;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.16);
+  --ring: var(--gto-gold);
+  --chart-1: var(--gto-gold);
+  --chart-2: #60a5fa;
+  --chart-3: #38bdf8;
+  --chart-4: #a78bfa;
+  --chart-5: #f87171;
+  --radius: 1rem;
+  --sidebar: rgba(5, 15, 36, 0.8);
+  --sidebar-foreground: var(--gto-snow);
+  --sidebar-primary: var(--gto-gold);
+  --sidebar-primary-foreground: #0a0e18;
+  --sidebar-accent: rgba(255, 255, 255, 0.08);
+  --sidebar-accent-foreground: var(--gto-snow);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: var(--gto-gold);
 }
 
 .dark {
-  --background: oklch(0.12 0 0);
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.15 0 0);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.15 0 0);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.6 0.18 250);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.22 0.02 250);
-  --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.2 0.01 250);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.25 0.03 250);
-  --accent-foreground: oklch(0.95 0 0);
-  --destructive: oklch(0.45 0.2 25);
-  --destructive-foreground: oklch(0.95 0 0);
-  --border: oklch(0.25 0.02 250);
-  --input: oklch(0.25 0.02 250);
-  --ring: oklch(0.6 0.18 250);
-  --chart-1: oklch(0.55 0.18 250);
-  --chart-2: oklch(0.65 0.15 180);
-  --chart-3: oklch(0.6 0.12 80);
-  --chart-4: oklch(0.7 0.1 320);
-  --chart-5: oklch(0.5 0.2 30);
-  --sidebar: oklch(0.15 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.6 0.18 250);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.22 0.02 250);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(0.25 0.02 250);
-  --sidebar-ring: oklch(0.6 0.18 250);
+  --background: #030915;
+  --foreground: var(--gto-snow);
+  --card: rgba(5, 15, 36, 0.9);
+  --card-foreground: var(--gto-snow);
+  --popover: rgba(5, 15, 36, 0.9);
+  --popover-foreground: var(--gto-snow);
+  --primary: var(--gto-gold-light);
+  --primary-foreground: #1a1205;
+  --secondary: rgba(255, 255, 255, 0.08);
+  --secondary-foreground: var(--gto-snow);
+  --muted: rgba(255, 255, 255, 0.08);
+  --muted-foreground: rgba(245, 247, 251, 0.8);
+  --accent: #ff725e;
+  --accent-foreground: #1a0e0a;
+  --destructive: #ff6161;
+  --destructive-foreground: #fff;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: var(--gto-gold-light);
+  --chart-1: var(--gto-gold-light);
+  --chart-2: #60a5fa;
+  --chart-3: #38bdf8;
+  --chart-4: #a78bfa;
+  --chart-5: #f87171;
+  --sidebar: rgba(3, 9, 21, 0.95);
+  --sidebar-foreground: var(--gto-snow);
+  --sidebar-primary: var(--gto-gold-light);
+  --sidebar-primary-foreground: #1a1205;
+  --sidebar-accent: rgba(255, 255, 255, 0.08);
+  --sidebar-accent-foreground: var(--gto-snow);
+  --sidebar-border: rgba(255, 255, 255, 0.12);
+  --sidebar-ring: var(--gto-gold-light);
 }
 
 @theme inline {
@@ -122,6 +129,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(circle at 20% 20%, rgba(214, 160, 58, 0.12), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(240, 93, 35, 0.08), transparent 40%);
+    font-feature-settings: "ss01" on, "case" on;
   }
 
   /* Mobile-optimized touch targets and spacing */
@@ -162,5 +172,33 @@
   /* Improve tap highlight color */
   * {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .gto-hero {
+    background: radial-gradient(circle at 20% 20%, rgba(241, 193, 102, 0.2), transparent 55%),
+      linear-gradient(140deg, rgba(5, 15, 36, 0.95), rgba(21, 59, 115, 0.9), rgba(199, 66, 47, 0.85));
+    border: 1px solid rgba(214, 160, 58, 0.35);
+    box-shadow: 0 25px 80px rgba(5, 15, 36, 0.8), inset 0 0 50px rgba(255, 255, 255, 0.04);
+  }
+
+  .gto-card {
+    background: linear-gradient(180deg, rgba(13, 28, 61, 0.9), rgba(7, 20, 44, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 60px rgba(2, 6, 23, 0.6);
+  }
+
+  .gto-divider {
+    background: linear-gradient(90deg, transparent, rgba(214, 160, 58, 0.6), transparent);
+    height: 2px;
+  }
+
+  .gto-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    mask: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent);
   }
 }

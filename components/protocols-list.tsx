@@ -53,11 +53,11 @@ export function ProtocolsList({ protocols, onView, onEdit, onDelete }: Protocols
 
   if (protocols.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16">
-          <FileText className="h-12 w-12 md:h-16 md:w-16 text-muted-foreground mb-4" />
-          <h3 className="text-base md:text-lg font-semibold mb-2">Нет протоколов</h3>
-          <p className="text-sm text-muted-foreground text-center">Создайте первый протокол для начала работы</p>
+      <Card className="gto-card border border-white/10">
+        <CardContent className="flex flex-col items-center justify-center py-16 text-white/80">
+          <FileText className="h-12 w-12 md:h-16 md:w-16 text-white/40 mb-4" />
+          <h3 className="text-base md:text-lg font-semibold mb-2 text-white">Нет протоколов</h3>
+          <p className="text-sm text-white/70 text-center">Создайте первый протокол для начала работы</p>
         </CardContent>
       </Card>
     )
@@ -65,32 +65,32 @@ export function ProtocolsList({ protocols, onView, onEdit, onDelete }: Protocols
 
   return (
     <>
-      <Card>
+      <Card className="gto-card border border-white/10">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base md:text-lg">Список протоколов</CardTitle>
-          <CardDescription className="text-sm">Всего протоколов: {protocols.length}</CardDescription>
+          <CardTitle className="text-base md:text-lg text-white">Список протоколов</CardTitle>
+          <CardDescription className="text-sm text-white/70">Всего протоколов: {protocols.length}</CardDescription>
         </CardHeader>
         <CardContent className="p-0 sm:p-6">
           {/* Desktop table view */}
-          <div className="hidden md:block rounded-md border">
+          <div className="hidden md:block rounded-md border border-white/10">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-white/5">
                 <TableRow>
-                  <TableHead>Дата</TableHead>
-                  <TableHead>Вид испытания</TableHead>
-                  <TableHead>Результат</TableHead>
-                  <TableHead>Уровень</TableHead>
-                  <TableHead className="text-right">Действия</TableHead>
+                  <TableHead className="text-white/80">Дата</TableHead>
+                  <TableHead className="text-white/80">Вид испытания</TableHead>
+                  <TableHead className="text-white/80">Результат</TableHead>
+                  <TableHead className="text-white/80">Уровень</TableHead>
+                  <TableHead className="text-right text-white/80">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {protocols.map((protocol) => {
                   const badge = getLevelBadge(protocol.level)
                   return (
-                    <TableRow key={protocol.id}>
-                      <TableCell className="font-medium">{formatDate(protocol)}</TableCell>
-                      <TableCell>{protocol.testType}</TableCell>
-                      <TableCell>{protocol.resultValue}</TableCell>
+                    <TableRow key={protocol.id} className="border-white/5">
+                      <TableCell className="font-medium text-white">{formatDate(protocol)}</TableCell>
+                      <TableCell className="text-white/90">{protocol.testType}</TableCell>
+                      <TableCell className="text-white/80">{protocol.resultValue}</TableCell>
                       <TableCell>
                         <span
                           className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${badge.class}`}
@@ -100,10 +100,22 @@ export function ProtocolsList({ protocols, onView, onEdit, onDelete }: Protocols
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
-                          <Button variant="ghost" size="sm" onClick={() => onView(protocol)} title="Просмотр">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onView(protocol)}
+                            title="Просмотр"
+                            className="text-white hover:bg-white/10"
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm" onClick={() => onEdit(protocol)} title="Редактировать">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onEdit(protocol)}
+                            title="Редактировать"
+                            className="text-white hover:bg-white/10"
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
@@ -111,10 +123,17 @@ export function ProtocolsList({ protocols, onView, onEdit, onDelete }: Protocols
                             size="sm"
                             onClick={() => exportSingleProtocolToCSV(protocol)}
                             title="Экспорт в CSV"
+                            className="text-white hover:bg-white/10"
                           >
                             <Download className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm" onClick={() => setDeleteId(protocol.id)} title="Удалить">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setDeleteId(protocol.id)}
+                            title="Удалить"
+                            className="text-destructive hover:bg-destructive/20"
+                          >
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </div>
@@ -131,12 +150,12 @@ export function ProtocolsList({ protocols, onView, onEdit, onDelete }: Protocols
             {protocols.map((protocol) => {
               const badge = getLevelBadge(protocol.level)
               return (
-                <Card key={protocol.id} className="overflow-hidden">
+                <Card key={protocol.id} className="overflow-hidden gto-card border border-white/10">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-2 mb-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm mb-1">{formatDate(protocol)}</p>
-                        <p className="text-sm text-muted-foreground truncate">{protocol.testType}</p>
+                        <p className="font-semibold text-sm mb-1 text-white">{formatDate(protocol)}</p>
+                        <p className="text-sm text-white/70 truncate">{protocol.testType}</p>
                       </div>
                       <span
                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold shrink-0 ${badge.class}`}
@@ -145,10 +164,15 @@ export function ProtocolsList({ protocols, onView, onEdit, onDelete }: Protocols
                       </span>
                     </div>
 
-                    <p className="text-xs text-muted-foreground mb-3">Результат: {protocol.resultValue}</p>
+                    <p className="text-xs text-white/70 mb-3">Результат: {protocol.resultValue}</p>
 
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => onView(protocol)} className="flex-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onView(protocol)}
+                        className="flex-1 border-white/20 text-white"
+                      >
                         <Eye className="mr-2 h-4 w-4" />
                         Просмотр
                       </Button>

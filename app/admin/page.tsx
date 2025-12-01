@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -34,16 +34,16 @@ function AdminPageContent() {
   const [sportTitles, setSportTitles] = useState<SportTitle[]>([])
   const [textMappings, setTextMappings] = useState<TextToNumberMapping[]>([])
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = () => {
+  const loadData = useCallback(() => {
     setTestTypes(getTestTypes())
     setLevels(getLevels())
     setSportTitles(getSportTitles())
     setTextMappings(getTextMappings())
-  }
+  }, [])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const handleSaveTestType = (data: TestTypeFormData, id?: string) => {
     const type: TestType = {

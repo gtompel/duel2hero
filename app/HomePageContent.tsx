@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { Plus, FileDown, Settings, LogOut, ArrowUpDown, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ProtocolForm } from "@/components/protocol-form"
@@ -38,13 +38,13 @@ export function HomePageContent() {
     dateToYear: "",
   })
 
-  useEffect(() => {
-    loadProtocols()
+  const loadProtocols = useCallback(() => {
+    setProtocols(getProtocols())
   }, [])
 
-  const loadProtocols = () => {
-    setProtocols(getProtocols())
-  }
+  useEffect(() => {
+    loadProtocols()
+  }, [loadProtocols])
 
   const filteredAndSortedProtocols = useMemo(() => {
     const filtered = filterProtocols(protocols, filters)

@@ -66,27 +66,31 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
   const yearOptions = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i)
 
   return (
-    <Card>
+    <Card className="gto-card border border-white/10">
       <CardContent className="pt-4 md:pt-6">
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/60" />
               <Input
                 placeholder="Поиск..."
                 value={filters.searchQuery}
                 onChange={(e) => handleChange("searchQuery", e.target.value)}
-                className="pl-9 h-11"
+                className="pl-9 h-11 bg-white/5 border-white/15 text-white placeholder:text-white/50"
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setIsExpanded(!isExpanded)} className="flex-1 sm:flex-none h-11">
+              <Button
+                variant="outline"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex-1 sm:flex-none h-11 border-white/20 text-white"
+              >
                 <Filter className="mr-2 h-4 w-4" />
                 <span className="hidden sm:inline">{isExpanded ? "Скрыть фильтры" : "Показать фильтры"}</span>
                 <span className="sm:hidden">{isExpanded ? "Скрыть" : "Фильтры"}</span>
               </Button>
               {hasActiveFilters && (
-                <Button variant="ghost" onClick={onReset} className="h-11">
+                <Button variant="ghost" onClick={onReset} className="h-11 text-white hover:bg-white/10">
                   <X className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Сбросить</span>
                 </Button>
@@ -97,14 +101,14 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
           {isExpanded && (
             <div className="grid gap-4 sm:grid-cols-2 pt-4 border-t">
               <div className="space-y-2">
-                <Label htmlFor="testType" className="text-sm">
+                <Label htmlFor="testType" className="text-sm text-white/80">
                   Вид испытания
                 </Label>
                 <Select value={filters.testType} onValueChange={(value) => handleChange("testType", value)}>
-                  <SelectTrigger id="testType" className="h-11">
+                  <SelectTrigger id="testType" className="h-11 bg-white/5 border-white/15 text-white">
                     <SelectValue placeholder="Все виды" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                     <SelectItem value="all">Все виды</SelectItem>
                     {testTypes.map((type) => (
                       <SelectItem key={type.id} value={type.name}>
@@ -116,14 +120,14 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="level" className="text-sm">
+                <Label htmlFor="level" className="text-sm text-white/80">
                   Уровень выполнения
                 </Label>
                 <Select value={filters.level} onValueChange={(value) => handleChange("level", value)}>
-                  <SelectTrigger id="level" className="h-11">
+                  <SelectTrigger id="level" className="h-11 bg-white/5 border-white/15 text-white">
                     <SelectValue placeholder="Все уровни" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                     <SelectItem value="all">Все уровни</SelectItem>
                     {levels.map((level) => (
                       <SelectItem key={level.id} value={level.code}>
@@ -135,16 +139,16 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <Label className="text-sm">Дата от</Label>
+                <Label className="text-sm text-white/80">Дата от</Label>
                 <div className="grid grid-cols-3 gap-2">
                   <Select
                     value={filters.dateFromDay || "0"} // Updated default value to be non-empty
                     onValueChange={(value) => handleChange("dateFromDay", value)}
                   >
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                       <SelectValue placeholder="День" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                       <SelectItem value="0">Любой</SelectItem>
                       {dayOptions.map((day) => (
                         <SelectItem key={day} value={day.toString()}>
@@ -158,10 +162,10 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
                     value={filters.dateFromMonth || "0"} // Updated default value to be non-empty
                     onValueChange={(value) => handleChange("dateFromMonth", value)}
                   >
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                       <SelectValue placeholder="Месяц" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                       <SelectItem value="0">Любой</SelectItem>
                       {monthOptions.map((month) => (
                         <SelectItem key={month.value} value={month.value.toString()}>
@@ -175,10 +179,10 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
                     value={filters.dateFromYear || "0"} // Updated default value to be non-empty
                     onValueChange={(value) => handleChange("dateFromYear", value)}
                   >
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                       <SelectValue placeholder="Год" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                       <SelectItem value="0">Любой</SelectItem>
                       {yearOptions.map((year) => (
                         <SelectItem key={year} value={year.toString()}>
@@ -191,16 +195,16 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <Label className="text-sm">Дата до</Label>
+                <Label className="text-sm text-white/80">Дата до</Label>
                 <div className="grid grid-cols-3 gap-2">
                   <Select
                     value={filters.dateToDay || "0"} // Updated default value to be non-empty
                     onValueChange={(value) => handleChange("dateToDay", value)}
                   >
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                       <SelectValue placeholder="День" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                       <SelectItem value="0">Любой</SelectItem>
                       {dayOptions.map((day) => (
                         <SelectItem key={day} value={day.toString()}>
@@ -214,10 +218,10 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
                     value={filters.dateToMonth || "0"} // Updated default value to be non-empty
                     onValueChange={(value) => handleChange("dateToMonth", value)}
                   >
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                       <SelectValue placeholder="Месяц" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                       <SelectItem value="0">Любой</SelectItem>
                       {monthOptions.map((month) => (
                         <SelectItem key={month.value} value={month.value.toString()}>
@@ -231,10 +235,10 @@ export function ProtocolsFilter({ filters, onFilterChange, onReset }: ProtocolsF
                     value={filters.dateToYear || "0"} // Updated default value to be non-empty
                     onValueChange={(value) => handleChange("dateToYear", value)}
                   >
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                       <SelectValue placeholder="Год" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                       <SelectItem value="0">Любой</SelectItem>
                       {yearOptions.map((year) => (
                         <SelectItem key={year} value={year.toString()}>

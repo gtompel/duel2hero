@@ -28,29 +28,29 @@ export function ProtocolView({ protocol }: ProtocolViewProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="gto-card border border-white/10">
         <CardHeader>
-          <CardTitle className="text-base md:text-lg">Информация о протоколе</CardTitle>
-          <CardDescription className="text-sm">
+          <CardTitle className="text-base md:text-lg text-white">Информация о протоколе</CardTitle>
+          <CardDescription className="text-sm text-white/70">
             Создан: {new Date(protocol.createdAt).toLocaleString("ru-RU")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
-              <p className="text-sm text-muted-foreground">Вид испытания</p>
-              <p className="font-medium">{protocol.testType}</p>
+              <p className="text-sm text-white/60">Вид испытания</p>
+              <p className="font-medium text-white">{protocol.testType}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Дата выполнения</p>
-              <p className="font-medium">{formattedDate}</p>
+              <p className="text-sm text-white/60">Дата выполнения</p>
+              <p className="font-medium text-white">{formattedDate}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Результат</p>
-              <p className="font-medium">{protocol.resultValue}</p>
+              <p className="text-sm text-white/60">Результат</p>
+              <p className="font-medium text-white">{protocol.resultValue}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Уровень выполнения</p>
+              <p className="text-sm text-white/60">Уровень выполнения</p>
               <span
                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${badge.class}`}
               >
@@ -60,12 +60,12 @@ export function ProtocolView({ protocol }: ProtocolViewProps) {
             {protocol.sportTitle && (
               <>
                 <div>
-                  <p className="text-sm text-muted-foreground">Спортивное звание</p>
-                  <p className="font-medium">{protocol.sportTitle}</p>
+                  <p className="text-sm text-white/60">Спортивное звание</p>
+                  <p className="font-medium text-white">{protocol.sportTitle}</p>
                 </div>
                 <div className="sm:col-span-2 lg:col-span-1">
-                  <p className="text-sm text-muted-foreground">Срок действия</p>
-                  <p className="font-medium">
+                  <p className="text-sm text-white/60">Срок действия</p>
+                  <p className="font-medium text-white">
                     {protocol.sportTitleFrom && protocol.sportTitleTo
                       ? `${new Date(protocol.sportTitleFrom).toLocaleDateString("ru-RU")} - ${new Date(protocol.sportTitleTo).toLocaleDateString("ru-RU")}`
                       : "Не указан"}

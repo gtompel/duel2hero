@@ -95,21 +95,21 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
-      <Card>
+      <Card className="gto-card border border-white/10">
         <CardHeader>
-          <CardTitle className="text-base md:text-lg">Информация о протоколе</CardTitle>
-          <CardDescription className="text-sm">Заполните данные о выполнении норматива ГТО</CardDescription>
+          <CardTitle className="text-base md:text-lg text-white">Информация о протоколе</CardTitle>
+          <CardDescription className="text-sm text-white/70">Заполните данные о выполнении норматива ГТО</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="testType" className="text-sm">
+            <Label htmlFor="testType" className="text-sm text-white/80">
               Вид испытания <span className="text-destructive">*</span>
             </Label>
             <Select value={watch("testType")} onValueChange={(value) => setValue("testType", value)}>
-              <SelectTrigger id="testType" className="h-11">
+              <SelectTrigger id="testType" className="h-11 bg-white/5 border-white/15 text-white">
                 <SelectValue placeholder="Выберите вид испытания" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                 {testTypes.map((type) => (
                   <SelectItem key={type.id} value={type.name}>
                     {type.name}
@@ -121,7 +121,7 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm">
+            <Label className="text-sm text-white/80">
               Дата выполнения <span className="text-destructive">*</span>
             </Label>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -130,10 +130,10 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
                   value={watch("dateDay")?.toString()}
                   onValueChange={(value) => setValue("dateDay", Number.parseInt(value))}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                     <SelectValue placeholder="День" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                     {dayOptions.map((day) => (
                       <SelectItem key={day} value={day.toString()}>
                         {day}
@@ -149,10 +149,10 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
                   value={watch("dateMonth")?.toString()}
                   onValueChange={(value) => setValue("dateMonth", Number.parseInt(value))}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                     <SelectValue placeholder="Месяц" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                     {monthOptions.map((month) => (
                       <SelectItem key={month.value} value={month.value.toString()}>
                         {month.label}
@@ -168,10 +168,10 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
                   value={watch("dateYear")?.toString()}
                   onValueChange={(value) => setValue("dateYear", Number.parseInt(value))}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger className="h-11 bg-white/5 border-white/15 text-white">
                     <SelectValue placeholder="Год" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                     {yearOptions.map((year) => (
                       <SelectItem key={year} value={year.toString()}>
                         {year}
@@ -185,7 +185,7 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="resultValue" className="text-sm">
+            <Label htmlFor="resultValue" className="text-sm text-white/80">
               Результат выполнения <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -194,23 +194,23 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
               placeholder="Введите числовое значение или текст (например: 12.5 или 'отлично')"
               value={resultInput ?? watch("resultValue")?.toString() ?? ""}
               onChange={(e) => handleResultChange(e.target.value)}
-              className="h-11"
+              className="h-11 bg-white/5 border-white/15 text-white placeholder:text-white/40"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               Можно ввести число или текст (будет преобразовано по настроенному маппингу)
             </p>
             {errors.resultValue && <p className="text-sm text-destructive">{errors.resultValue.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="level" className="text-sm">
+            <Label htmlFor="level" className="text-sm text-white/80">
               Уровень выполнения <span className="text-destructive">*</span>
             </Label>
             <Select value={watch("level")} onValueChange={(value) => setValue("level", value as any)}>
-              <SelectTrigger id="level" className="h-11">
+              <SelectTrigger id="level" className="h-11 bg-white/5 border-white/15 text-white">
                 <SelectValue placeholder="Выберите уровень" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                 {levels.map((level) => (
                   <SelectItem key={level.id} value={level.code}>
                     {level.name}
@@ -222,14 +222,14 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sportTitle" className="text-sm">
+            <Label htmlFor="sportTitle" className="text-sm text-white/80">
               Спортивное звание/разряд (опционально)
             </Label>
             <Select value={watch("sportTitle") || ""} onValueChange={(value) => setValue("sportTitle", value)}>
-              <SelectTrigger id="sportTitle" className="h-11">
+              <SelectTrigger id="sportTitle" className="h-11 bg-white/5 border-white/15 text-white">
                 <SelectValue placeholder="Не указано" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#0b1b3a] text-white border border-white/10">
                 {sportTitles.map((title) => (
                   <SelectItem key={title.id} value={title.name}>
                     {title.name}
@@ -243,18 +243,28 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           {watch("sportTitle") && watch("sportTitle") !== "" && (
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="sportTitleFrom" className="text-sm">
+                <Label htmlFor="sportTitleFrom" className="text-sm text-white/80">
                   Срок действия с <span className="text-destructive">*</span>
                 </Label>
-                <Input id="sportTitleFrom" type="date" {...register("sportTitleFrom")} className="h-11" />
+                <Input
+                  id="sportTitleFrom"
+                  type="date"
+                  {...register("sportTitleFrom")}
+                  className="h-11 bg-white/5 border-white/15 text-white"
+                />
                 {errors.sportTitleFrom && <p className="text-sm text-destructive">{errors.sportTitleFrom.message}</p>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="sportTitleTo" className="text-sm">
+                <Label htmlFor="sportTitleTo" className="text-sm text-white/80">
                   Срок действия до <span className="text-destructive">*</span>
                 </Label>
-                <Input id="sportTitleTo" type="date" {...register("sportTitleTo")} className="h-11" />
+                <Input
+                  id="sportTitleTo"
+                  type="date"
+                  {...register("sportTitleTo")}
+                  className="h-11 bg-white/5 border-white/15 text-white"
+                />
                 {errors.sportTitleTo && <p className="text-sm text-destructive">{errors.sportTitleTo.message}</p>}
               </div>
             </div>
@@ -262,18 +272,18 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
         </CardContent>
       </Card>
 
-      <div className="flex flex-col sm:flex-row gap-3 sm:justify-end sticky bottom-0 bg-background py-3 border-t sm:border-0 sm:static -mx-3 px-3 sm:mx-0 sm:px-0">
+      <div className="flex flex-col sm:flex-row gap-3 sm:justify-end sticky bottom-0 bg-background/80 py-3 border-t border-white/10 sm:border-0 sm:static -mx-3 px-3 sm:mx-0 sm:px-0 backdrop-blur">
         {onCancel && (
           <Button
             type="button"
-            variant="outline"
             onClick={onCancel}
-            className="w-full sm:w-auto order-2 sm:order-1 bg-transparent"
+            variant="outline"
+            className="w-full sm:w-auto order-2 sm:order-1 bg-transparent border-white/20 text-white"
           >
             Отмена
           </Button>
         )}
-        <Button type="submit" className="w-full sm:w-auto order-1 sm:order-2">
+        <Button type="submit" className="w-full sm:w-auto order-1 sm:order-2 bg-[var(--gto-gold)] text-[#050f24] hover:bg-[var(--gto-gold-light)]">
           <Save className="mr-2 h-4 w-4" />
           Сохранить протокол
         </Button>
