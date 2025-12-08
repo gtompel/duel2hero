@@ -76,19 +76,22 @@ export function LoginForm() {
         });
 
         if (!response.ok) {
-          throw new Error('Registration failed');
+          const errorData = await response.json()
+          setError(errorData.error || 'Registration failed')
+          setIsLoading(false)
+          return
         }
 
-        // После успешной регистрации сразу логиним пользователя
-        const user = await login(username.trim(), password)
-        if (user) {
-          router.push("/")
-          router.refresh()
-        } else {
-          setError("Ошибка входа после регистрации")
-        }
+        // После успешной регистрации показываем сообщение и предлагаем войти
+        setSuccessMessage("Регистрация успешна! Теперь вы можете войти в систему.")
+        // Очищаем поля формы и переключаемся на режим входа
+        setPassword("")
+        setConfirmPassword("")
+        setIsRegistering(false)
+        setIsLoading(false)
       } catch (err) {
         setError("Ошибка при регистрации")
+        setIsLoading(false)
       }
     } else {
       // Вход существующего пользователя

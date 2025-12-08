@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createUser, userExists } from "@/services/authService"
+import { createUser, getUserByUsername } from "@/services/authService"
 import { Prisma } from "@prisma/client"
 
 // POST /api/auth/register - регистрация нового пользователя
@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем, существует ли пользователь с таким именем
-    const exists = await userExists(username)
-    if (exists) {
+    const existingUser = await getUserByUsername(username)
+    if (existingUser) {
       return NextResponse.json({ error: "User with this username already exists" }, { status: 409 })
     }
 
