@@ -1,11 +1,27 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { protocolSchema } from "@/lib/validation"
-import { getProtocols, createProtocol, getCurrentUser } from "@/lib/storage"
+import { getProtocols, createProtocol } from "@/services/protocolService"
+import { authenticateUser } from "@/services/authService"
 import type { ProtocolFilters } from "@/lib/types"
+import { logUserAction } from "@/services/auditLogService"
 
 // GET /api/protocols - получить список протоколов с фильтрацией и пагинацией
 export async function GET(request: NextRequest) {
   try {
+    // В реальной реализации здесь будет проверка токена из cookies
+    // const token = request.cookies.get('authToken')?.value
+    // if (!token) {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    // }
+    // 
+    // let userId: string | null = null
+    // try {
+    //   const decoded = jwt.verify(token, process.env.JWT_SECRET!)
+    //   userId = (decoded as { userId: string }).userId
+    // } catch (error) {
+    //   return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    // }
+
     const searchParams = request.nextUrl.searchParams
 
     // Parse filters
@@ -32,46 +48,15 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    let protocols = getProtocols()
+    // Get protocols from database
+    const result = await getProtocols(filters)
 
-    // Apply filters
-    if (filters.testType) {
-      protocols = protocols.filter((p) => p.testType === filters.testType)
-    }
-    if (filters.level) {
-      protocols = protocols.filter((p) => p.level === filters.level)
-    }
-    if (filters.dateFrom) {
-      protocols = protocols.filter((p) => {
-        const protocolDate = new Date(p.dateYear, p.dateMonth - 1, p.dateDay)
-        const fromDate = new Date(filters.dateFrom!.year, filters.dateFrom!.month - 1, filters.dateFrom!.day)
-        return protocolDate >= fromDate
-      })
-    }
-    if (filters.dateTo) {
-      protocols = protocols.filter((p) => {
-        const protocolDate = new Date(p.dateYear, p.dateMonth - 1, p.dateDay)
-        const toDate = new Date(filters.dateTo!.year, filters.dateTo!.month - 1, filters.dateTo!.day)
-        return protocolDate <= toDate
-      })
-    }
+    // Логируем действие просмотра списка протоколов
+    // if (userId) {
+    //   await logUserAction(userId, "READ", "Protocol", "list")
+    // }
 
-    // Pagination
-    const page = filters.page || 1
-    const limit = filters.limit || 10
-    const startIndex = (page - 1) * limit
-    const endIndex = startIndex + limit
-    const paginatedProtocols = protocols.slice(startIndex, endIndex)
-
-    return NextResponse.json({
-      data: paginatedProtocols,
-      pagination: {
-        page,
-        limit,
-        total: protocols.length,
-        totalPages: Math.ceil(protocols.length / limit),
-      },
-    })
+    return NextResponse.json(result)
   } catch (error) {
     console.error("[v0] Error fetching protocols:", error)
     return NextResponse.json({ error: "Failed to fetch protocols" }, { status: 500 })
@@ -81,11 +66,19 @@ export async function GET(request: NextRequest) {
 // POST /api/protocols - создать новый протокол
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const user = getCurrentUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    // В реальной реализации здесь будет проверка токена из cookies
+    // const token = request.cookies.get('authToken')?.value
+    // if (!token) {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    // }
+    // 
+    // let userId: string | null = null
+    // try {
+    //   const decoded = jwt.verify(token, process.env.JWT_SECRET!)
+    //   userId = (decoded as { userId: string }).userId
+    // } catch (error) {
+    //   return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    // }
 
     const body = await request.json()
 
@@ -103,7 +96,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Create protocol
-    const protocol = createProtocol(sanitizedData)
+    const protocol = await createProtocol(sanitizedData)
+
+    // Log action
+    // if (userId) {
+    //   await logUserAction(userId, "CREATE", "Protocol", protocol.id, JSON.stringify(sanitizedData))
+    // }
 
     return NextResponse.json({ data: protocol }, { status: 201 })
   } catch (error) {

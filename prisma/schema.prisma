@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Protocol {
@@ -59,12 +58,13 @@ model SportTitle {
 
 model TextToNumberMapping {
   id          String @id @default(cuid())
-  textValue   String @unique
+  textValue   String
   numberValue Float
   testType    String
   createdAt   DateTime @default(now())
   
   @@index([testType])
+  @@unique([textValue, testType])
 }
 
 model AuditLog {
@@ -77,5 +77,31 @@ model AuditLog {
   createdAt DateTime @default(now())
   
   @@index([entity, entityId])
+  @@index([userId])
+}
+
+model User {
+  id       String @id @default(cuid())
+  username String @unique
+  password String // hashed password (required)
+  role     String // admin, user
+  createdAt DateTime @default(now())
+  
+  passwordResetTokens PasswordResetToken[]
+  
+  @@index([username])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([token])
   @@index([userId])
 }

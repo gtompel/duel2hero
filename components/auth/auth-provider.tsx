@@ -2,12 +2,11 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { User } from "@/lib/types"
-import { getCurrentUser, logout as logoutUser, login as loginUser } from "@/lib/storage"
 
 interface AuthContextType {
   user: User | null
   isLoading: boolean
-  login: (username: string) => User | null
+  login: (username: string, password: string) => Promise<User | null>
   logout: () => void
 }
 
@@ -17,9 +16,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const loadCurrentUser = useCallback(() => {
-    const currentUser = getCurrentUser()
-    setUser(currentUser)
+  const loadCurrentUser = useCallback(async () => {
+    // Проверяем наличие токена в localStorage
+    const token = localStorage.getItem("authToken")
+    if (token) {
+      try {
+        // В реальной реализации здесь будет декодирование JWT токена
+        // и получение ID пользователя из токена
+        // const decoded = jwt.decode(token);
+        // const userId = decoded.userId;
+        
+        // Пока используем упрощенную реализацию с хранением ID пользователя
+        const userId = localStorage.getItem("userId")
+        if (userId) {
+          try {
+            const response = await fetch(`/api/auth/user/${userId}`)
+            if (response.ok) {
+              const result = await response.json()
+              if (result.data) {
+                setUser(result.data)
+              } else {
+                // Если пользователь не найден, удаляем токен
+                localStorage.removeItem("authToken")
+                localStorage.removeItem("userId")
+              }
+            } else {
+              // Если ошибка, удаляем токен
+              localStorage.removeItem("authToken")
+              localStorage.removeItem("userId")
+            }
+          } catch (error) {
+            console.error("Error fetching user:", error)
+            localStorage.removeItem("authToken")
+            localStorage.removeItem("userId")
+          }
+        }
+      } catch (e) {
+        console.error("Error loading current user", e)
+        // При ошибке удаляем токен
+        localStorage.removeItem("authToken")
+        localStorage.removeItem("userId")
+      }
+    }
     setIsLoading(false)
   }, [])
 
@@ -27,17 +65,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadCurrentUser()
   }, [loadCurrentUser])
 
-  const login = (username: string) => {
-    const loggedInUser = loginUser(username)
-    if (loggedInUser) {
-      setUser(loggedInUser)
+  const login = async (username: string, password: string) => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        const authenticatedUser = result.data
+        if (authenticatedUser) {
+          setUser(authenticatedUser)
+          // В реальной реализации здесь будет генерация JWT токена
+          // const token = generateToken(authenticatedUser.id);
+          // localStorage.setItem("authToken", token);
+          localStorage.setItem("userId", authenticatedUser.id)
+          return authenticatedUser
+        }
+      }
+      return null
+    } catch (error) {
+      console.error("Error logging in:", error)
+      return null
     }
-    return loggedInUser
   }
 
   const logout = () => {
-    logoutUser()
     setUser(null)
+    // Удаляем токен и ID пользователя из localStorage
+    localStorage.removeItem("authToken")
+    localStorage.removeItem("userId")
   }
 
   return <AuthContext.Provider value={{ user, isLoading, login, logout }}>{children}</AuthContext.Provider>
