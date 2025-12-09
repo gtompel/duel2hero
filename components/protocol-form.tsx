@@ -10,7 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { protocolSchema, type ProtocolFormData } from "@/lib/validation"
 import { getTestTypes, getLevels, getSportTitles, convertTextToNumber } from "@/lib/storage"
 import type { Protocol } from "@/lib/types"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import dynamic from "next/dynamic"
+
+const ImageUpload = dynamic(() => import("@/components/image-upload").then(m => m.ImageUpload), {
+  ssr: false,
+})
 
 interface ProtocolFormProps {
   protocol?: Protocol
@@ -19,10 +24,20 @@ interface ProtocolFormProps {
 }
 
 export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps) {
-  const testTypes = getTestTypes()
-  const levels = getLevels()
-  const sportTitles = getSportTitles()
+  const [testTypes, setTestTypes] = useState(getTestTypes())
+  const [levels, setLevels] = useState(getLevels())
+  const [sportTitles, setSportTitles] = useState(getSportTitles())
   const [resultInput, setResultInput] = useState("")
+  const [imageUrl, setImageUrl] = useState(protocol?.imageUrl || "")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    // Перезагружаем данные после монтирования для актуальности
+    setTestTypes(getTestTypes())
+    setLevels(getLevels())
+    setSportTitles(getSportTitles())
+  }, [])
 
   const {
     register,
@@ -72,6 +87,25 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
     }
   }
 
+  const handleImageProcessed = (data: Partial<ProtocolFormData>) => {
+    // Обновляем поля формы данными, извлеченными из изображения
+    if (data.testType) setValue("testType", data.testType)
+    if (data.dateDay) setValue("dateDay", data.dateDay)
+    if (data.dateMonth) setValue("dateMonth", data.dateMonth)
+    if (data.dateYear) setValue("dateYear", data.dateYear)
+    if (data.resultValue) setValue("resultValue", data.resultValue)
+    if (data.level) setValue("level", data.level as any)
+    if (data.sportTitle) setValue("sportTitle", data.sportTitle)
+    if (data.sportTitleFrom) setValue("sportTitleFrom", data.sportTitleFrom)
+    if (data.sportTitleTo) setValue("sportTitleTo", data.sportTitleTo)
+  }
+
+  const handleImageUpload = (url: string) => {
+    // Сохраняем URL изображения
+    setImageUrl(url)
+    setValue("imageUrl", url)
+  }
+
   // Generate day options (1-31)
   const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1)
   // Generate month options (1-12)
@@ -101,6 +135,8 @@ export function ProtocolForm({ protocol, onSubmit, onCancel }: ProtocolFormProps
           <CardDescription className="text-sm text-white/70">Заполните данные о выполнении норматива ГТО</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <ImageUpload onImageProcessed={handleImageProcessed} onImageUpload={handleImageUpload} />
+          
           <div className="space-y-2">
             <Label htmlFor="testType" className="text-sm text-white/80">
               Вид испытания <span className="text-destructive">*</span>

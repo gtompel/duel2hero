@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { User } from "@/lib/types"
+import jwt from 'jsonwebtoken'
 
 interface AuthContextType {
   user: User | null
@@ -12,25 +13,29 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// Секрет для подписи JWT токенов (в реальном приложении должен храниться на сервере)
+const JWT_SECRET = "gto_jwt_secret_key"
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const loadCurrentUser = useCallback(async () => {
+    // Проверяем, что код выполняется на клиенте
+    if (typeof window === 'undefined') {
+      setIsLoading(false)
+      return
+    }
+
     // Проверяем наличие токена в localStorage
     const token = localStorage.getItem("authToken")
     if (token) {
       try {
-        // В реальной реализации здесь будет декодирование JWT токена
-        // и получение ID пользователя из токена
-        // const decoded = jwt.decode(token);
-        // const userId = decoded.userId;
-        
-        // Пока используем упрощенную реализацию с хранением ID пользователя
-        const userId = localStorage.getItem("userId")
-        if (userId) {
+        // Декодируем JWT токен
+        const decoded: any = jwt.decode(token)
+        if (decoded && decoded.userId) {
           try {
-            const response = await fetch(`/api/auth/user/${userId}`)
+            const response = await fetch(`/api/auth/user/${decoded.userId}`)
             if (response.ok) {
               const result = await response.json()
               if (result.data) {
@@ -38,24 +43,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               } else {
                 // Если пользователь не найден, удаляем токен
                 localStorage.removeItem("authToken")
-                localStorage.removeItem("userId")
               }
             } else {
               // Если ошибка, удаляем токен
               localStorage.removeItem("authToken")
-              localStorage.removeItem("userId")
             }
           } catch (error) {
             console.error("Error fetching user:", error)
             localStorage.removeItem("authToken")
-            localStorage.removeItem("userId")
           }
         }
       } catch (e) {
-        console.error("Error loading current user", e)
+        console.error("Error decoding token", e)
         // При ошибке удаляем токен
         localStorage.removeItem("authToken")
-        localStorage.removeItem("userId")
       }
     }
     setIsLoading(false)
@@ -80,10 +81,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const authenticatedUser = result.data
         if (authenticatedUser) {
           setUser(authenticatedUser)
-          // В реальной реализации здесь будет генерация JWT токена
-          // const token = generateToken(authenticatedUser.id);
-          // localStorage.setItem("authToken", token);
-          localStorage.setItem("userId", authenticatedUser.id)
+          // Генерируем и сохраняем JWT токен
+          if (typeof window !== 'undefined') {
+            const token = jwt.sign(
+              { userId: authenticatedUser.id, username: authenticatedUser.username },
+              JWT_SECRET,
+              { expiresIn: '24h' }
+            )
+            localStorage.setItem("authToken", token)
+          }
           return authenticatedUser
         }
       }
@@ -96,9 +102,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null)
-    // Удаляем токен и ID пользователя из localStorage
-    localStorage.removeItem("authToken")
-    localStorage.removeItem("userId")
+    // Удаляем токен из localStorage только на клиенте
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("authToken")
+    }
   }
 
   return <AuthContext.Provider value={{ user, isLoading, login, logout }}>{children}</AuthContext.Provider>

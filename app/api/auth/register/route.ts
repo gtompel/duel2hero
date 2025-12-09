@@ -5,7 +5,25 @@ import { Prisma } from "@prisma/client"
 // POST /api/auth/register - регистрация нового пользователя
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    // Проверяем Content-Type
+    const contentType = request.headers.get("content-type")
+    if (!contentType || !contentType.includes("application/json")) {
+      return NextResponse.json(
+        { error: "Content-Type must be application/json" },
+        { status: 400 }
+      )
+    }
+
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      )
+    }
+
     const { username, password } = body
 
     if (!username || !password) {
@@ -24,6 +42,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ data: user }, { status: 201 })
   } catch (error) {
     console.error("[API] Error registering user:", error)
+    
+    // Если это ошибка парсинга JSON, возвращаем более понятное сообщение
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      )
+    }
     
     // Обработка ошибки уникального ограничения Prisma (на случай race condition)
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {

@@ -41,6 +41,7 @@ export const protocolSchema = z
     sportTitle: z.string().optional(),
     sportTitleFrom: z.string().optional(),
     sportTitleTo: z.string().optional(),
+    imageUrl: z.string().optional(),
   })
   .refine(
     (data) => {

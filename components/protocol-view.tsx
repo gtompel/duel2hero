@@ -1,17 +1,50 @@
 "use client"
 
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Protocol } from "@/lib/types"
 import { getLevels } from "@/lib/storage"
+import type { Level } from "@/lib/types"
 
 interface ProtocolViewProps {
   protocol: Protocol
 }
 
 export function ProtocolView({ protocol }: ProtocolViewProps) {
-  const levels = getLevels()
+  const [levels, setLevels] = useState<Level[]>([])
+  const [mounted, setMounted] = useState(false)
 
+  useEffect(() => {
+    setMounted(true)
+    setLevels(getLevels())
+  }, [])
+
+  // Форматирование даты одинаково на сервере и клиенте
   const formattedDate = `${protocol.dateDay.toString().padStart(2, "0")}.${protocol.dateMonth.toString().padStart(2, "0")}.${protocol.dateYear}`
+  
+  // Форматирование даты создания протокола
+  const formatDateTime = (dateString: string) => {
+    if (!mounted) return dateString
+    const date = new Date(dateString)
+    return date.toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
+
+  const formatDate = (dateString: string) => {
+    if (!mounted) return dateString
+    const date = new Date(dateString)
+    return date.toLocaleDateString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+  }
 
   const levelName = levels.find((l) => l.code === protocol.level)?.name || protocol.level
 
@@ -32,7 +65,7 @@ export function ProtocolView({ protocol }: ProtocolViewProps) {
         <CardHeader>
           <CardTitle className="text-base md:text-lg text-white">Информация о протоколе</CardTitle>
           <CardDescription className="text-sm text-white/70">
-            Создан: {new Date(protocol.createdAt).toLocaleString("ru-RU")}
+            Создан: {formatDateTime(protocol.createdAt)}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -67,13 +100,29 @@ export function ProtocolView({ protocol }: ProtocolViewProps) {
                   <p className="text-sm text-white/60">Срок действия</p>
                   <p className="font-medium text-white">
                     {protocol.sportTitleFrom && protocol.sportTitleTo
-                      ? `${new Date(protocol.sportTitleFrom).toLocaleDateString("ru-RU")} - ${new Date(protocol.sportTitleTo).toLocaleDateString("ru-RU")}`
+                      ? `${formatDate(protocol.sportTitleFrom)} - ${formatDate(protocol.sportTitleTo)}`
                       : "Не указан"}
                   </p>
                 </div>
               </>
             )}
           </div>
+          
+          {protocol.imageUrl && (
+            <div className="space-y-2">
+              <p className="text-sm text-white/60">Изображение протокола</p>
+              <div className="relative rounded-lg overflow-hidden border border-white/10 aspect-auto">
+                <Image
+                  src={protocol.imageUrl}
+                  alt="Изображение протокола"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto max-h-96 object-contain"
+                  unoptimized
+                />
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

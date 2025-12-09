@@ -10,6 +10,7 @@ export interface Protocol {
   sportTitle?: string // Спортивное звание (опционально)
   sportTitleFrom?: string // Дата начала действия звания
   sportTitleTo?: string // Дата окончания действия звания
+  imageUrl?: string // Ссылка на изображение протокола (опционально)
   createdAt: string
   updatedAt: string
 }

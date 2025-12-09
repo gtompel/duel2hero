@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import jwt from 'jsonwebtoken'
 
 // Список защищенных путей
 const protectedPaths = [
@@ -16,6 +17,9 @@ const publicPaths = [
   '/login',
   '/api/auth',
 ]
+
+// Секрет для проверки JWT токенов
+const JWT_SECRET = "gto_jwt_secret_key"
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -43,16 +47,16 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
     
-    // В реальной реализации здесь будет проверка валидности токена
-    // try {
-    //   const decoded = jwt.verify(token.value, process.env.JWT_SECRET!)
-    //   // Токен валиден, продолжаем выполнение
-    // } catch (error) {
-    //   // Токен недействителен, перенаправляем на страницу входа
-    //   const url = request.nextUrl.clone()
-    //   url.pathname = '/login'
-    //   return NextResponse.redirect(url)
-    // }
+    // Проверка валидности токена
+    try {
+      jwt.verify(token.value, JWT_SECRET)
+      // Токен валиден, продолжаем выполнение
+    } catch (error) {
+      // Токен недействителен, перенаправляем на страницу входа
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
   }
   
   return NextResponse.next()

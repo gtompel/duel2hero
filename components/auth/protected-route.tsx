@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "./auth-provider"
 import { Loader2 } from "lucide-react"
@@ -14,20 +14,29 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!isLoading) {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (mounted && !isLoading) {
       if (!user) {
         router.push("/login")
       } else if (requireAdmin && user.role !== "admin") {
         router.push("/")
       }
     }
-  }, [user, isLoading, requireAdmin, router])
+  }, [user, isLoading, requireAdmin, router, mounted])
 
-  // Поскольку это клиентский компонент, isLoading изначально true
-  // и мы безопасно показываем loader до завершения проверки
-  if (isLoading) {
+  // Всегда возвращаем одинаковую структуру до завершения проверки
+  // Это предотвращает гидратационные ошибки
+  if (!mounted || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -36,7 +45,8 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
   }
 
   if (!user || (requireAdmin && user.role !== "admin")) {
-    return null
+    // Возвращаем пустой div вместо null для консистентности
+    return <div className="min-h-screen bg-background" />
   }
 
   return <>{children}</>
